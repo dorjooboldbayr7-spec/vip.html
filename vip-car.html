@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP Motors — Luxury Vehicles</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:#fff;color:#0E1418;font-family:'Inter',sans-serif;font-weight:300;overflow-x:hidden;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:60px;
+  background:rgba(14,20,24,0.92);
+  backdrop-filter:blur(12px);
+  transition:background 0.3s;
+}
+nav.light{background:rgba(255,255,255,0.95);border-bottom:1px solid rgba(0,0,0,0.08);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:500;letter-spacing:6px;color:#fff;text-transform:uppercase;}
+nav.light .nav-logo{color:#0E1418;}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:12px;letter-spacing:0.5px;transition:color 0.2s;}
+nav.light .nav-links a{color:#0E1418;}
+.nav-links a:hover{color:#fff;}
+nav.light .nav-links a:hover{color:#888;}
+.nav-btn{background:transparent;border:1px solid rgba(255,255,255,0.4);color:#fff;font-family:'Inter',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 20px;cursor:pointer;transition:all 0.2s;}
+nav.light .nav-btn{border-color:#0E1418;color:#0E1418;}
+.nav-btn:hover{background:#fff;color:#0E1418;}
+
+/* HERO */
+.hero{position:relative;height:100vh;overflow:hidden;background:#0E1418;}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;}
+.hero-slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 60px 80px;
+  opacity:0;transition:opacity 1s ease;pointer-events:none;
+}
+.hero-slide.active{opacity:1;pointer-events:all;}
+.hero-img-placeholder{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.car-silhouette{
+  width:60%;opacity:0.06;
+  display:flex;flex-direction:column;align-items:center;
+}
+.car-s-roof{width:46%;height:60px;border:1px solid #fff;border-bottom:none;margin-bottom:-1px;}
+.car-s-body{width:100%;height:120px;border:1px solid #fff;position:relative;}
+.car-s-wheels{display:flex;justify-content:space-between;padding:0 10%;margin-top:-1px;}
+.car-s-wheel{width:56px;height:56px;border:1px solid #fff;border-radius:50%;margin-top:-28px;}
+
+.hero-tag{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:16px;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(48px,6.5vw,90px);font-weight:400;color:#fff;line-height:1;letter-spacing:-1px;margin-bottom:28px;}
+.hero-title em{font-style:italic;}
+.hero-actions{display:flex;align-items:center;gap:24px;}
+.btn-hero{background:#fff;color:#0E1418;border:none;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:13px 32px;cursor:pointer;transition:all 0.2s;}
+.btn-hero:hover{background:#e0e0e0;}
+.btn-hero-ghost{background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.3);font-family:'Inter',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:13px 32px;cursor:pointer;transition:all 0.2s;}
+.btn-hero-ghost:hover{border-color:#fff;color:#fff;}
+
+/* HERO DOTS */
+.hero-dots{position:absolute;bottom:32px;left:60px;display:flex;gap:8px;}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.3);cursor:pointer;transition:background 0.3s;}
+.dot.active{background:#fff;}
+
+/* HERO THUMBS */
+.hero-thumbs{
+  position:absolute;right:0;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:2px;width:180px;
+}
+.thumb{
+  padding:16px 20px;background:rgba(0,0,0,0.4);cursor:pointer;
+  border-left:2px solid transparent;transition:all 0.3s;
+}
+.thumb.active{background:rgba(0,0,0,0.7);border-left-color:#fff;}
+.thumb:hover{background:rgba(0,0,0,0.6);}
+.thumb-title{font-size:12px;color:#fff;font-weight:400;margin-bottom:2px;}
+.thumb-sub{font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:1px;}
+
+/* MODELS SECTION */
+.models{padding:80px 60px;background:#fff;}
+.sec-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px;}
+.sec-tag{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#888;margin-bottom:10px;}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(32px,3.5vw,48px);font-weight:400;line-height:1.1;}
+.sec-title em{font-style:italic;}
+.sec-link{color:#0E1418;text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(0,0,0,0.3);padding-bottom:2px;transition:all 0.2s;white-space:nowrap;}
+.sec-link:hover{border-color:#0E1418;}
+.sec-link::after{content:'→';transition:transform 0.2s;}
+.sec-link:hover::after{transform:translateX(4px);}
+
+.models-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.model-card{cursor:pointer;overflow:hidden;}
+.model-img{
+  aspect-ratio:5/4;background:#F0F0F0;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;transition:transform 0.5s ease;
+}
+.model-card:hover .model-img{transform:scale(1.03);}
+.model-ph{display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0.15;}
+.model-ph-car{width:100px;height:40px;border:1px solid #0E1418;position:relative;}
+.model-ph-car::before{content:'';position:absolute;top:-18px;left:18px;right:18px;height:20px;border:1px solid #0E1418;border-bottom:none;}
+.model-ph-car::after{content:'';position:absolute;bottom:-18px;left:10px;width:20px;height:20px;border:1px solid #0E1418;border-radius:50%;box-shadow:56px 0 0 0 rgba(14,20,24,0.15);}
+.model-ph-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#0E1418;margin-top:8px;}
+
+.model-badge{position:absolute;top:12px;left:12px;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;}
+.badge-new{background:#0E1418;color:#fff;}
+.badge-elec{background:#1B5E3B;color:#fff;}
+.badge-hybrid{background:#1A3A5C;color:#fff;}
+
+.model-info{padding:16px 0 20px;}
+.model-fuel{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#888;margin-bottom:4px;}
+.model-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;margin-bottom:4px;}
+.model-desc{font-size:11px;color:#888;margin-bottom:12px;line-height:1.5;}
+.model-link{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#0E1418;text-decoration:none;display:inline-flex;align-items:center;gap:8px;border-bottom:1px solid rgba(0,0,0,0.2);padding-bottom:1px;transition:all 0.2s;}
+.model-link:hover{border-color:#0E1418;}
+.model-link::after{content:'→';}
+
+/* DARK STRIP */
+.dark-strip{background:#0E1418;padding:64px 60px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;}
+.ds-item{padding:32px;border-right:1px solid rgba(255,255,255,0.08);}
+.ds-item:last-child{border-right:none;}
+.ds-num{font-family:'Playfair Display',serif;font-size:44px;font-weight:400;color:#fff;line-height:1;margin-bottom:6px;}
+.ds-lbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+
+/* DISCOVER */
+.discover{padding:80px 60px;background:#F8F8F8;}
+.discover-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px;}
+.disc-card{position:relative;cursor:pointer;overflow:hidden;}
+.disc-img{
+  aspect-ratio:1/1;background:#E8E8E8;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;transition:transform 0.5s ease;
+}
+.disc-card:hover .disc-img{transform:scale(1.04);}
+.disc-ph{display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0.12;}
+.disc-ph-box{width:80px;height:80px;border:1px solid #0E1418;}
+.disc-ph-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;}
+.disc-info{padding:20px 0;}
+.disc-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;margin-bottom:6px;}
+.disc-sub{font-size:12px;color:#888;}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* CONTACT */
+.contact{padding:80px 60px;background:#fff;display:grid;grid-template-columns:1fr 1fr;gap:80px;}
+.contact-info{}
+.cinfo-items{margin-top:40px;display:flex;flex-direction:column;gap:24px;}
+.cinfo-item{}
+.cinfo-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#888;margin-bottom:6px;}
+.cinfo-val{font-size:13px;color:#0E1418;line-height:1.7;}
+.cform{display:flex;flex-direction:column;}
+.cfield{border-bottom:1px solid rgba(0,0,0,0.1);padding:18px 0;}
+.cfield label{display:block;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#999;margin-bottom:6px;}
+.cfield input{width:100%;background:transparent;border:none;outline:none;font-family:'Inter',sans-serif;font-size:14px;color:#0E1418;font-weight:300;}
+.cfield input::placeholder{color:rgba(0,0,0,0.2);}
+.csubmit{margin-top:32px;background:#0E1418;color:#fff;border:none;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;cursor:pointer;transition:background 0.2s;align-self:flex-start;}
+.csubmit:hover{background:#333;}
+
+/* FOOTER */
+footer{background:#0E1418;padding:36px 60px;display:flex;align-items:center;justify-content:space-between;}
+.f-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:500;letter-spacing:6px;color:#fff;text-transform:uppercase;}
+.f-copy{font-size:11px;color:rgba(255,255,255,0.3);}
+.f-links{display:flex;gap:24px;list-style:none;}
+.f-links a{color:rgba(255,255,255,0.3);text-decoration:none;font-size:10px;letter-spacing:1px;transition:color 0.2s;}
+.f-links a:hover{color:#fff;}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <div class="nav-logo">VIP Motors</div>
+  <ul class="nav-links">
+    <li><a href="#models">Загварууд</a></li>
+    <li><a href="#discover">Үйлчилгээ</a></li>
+    <li><a href="#contact">Холбоо барих</a></li>
+  </ul>
+  <button class="nav-btn">Үзэлт захиалах</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+
+  <!-- Slide 1 -->
+  <div class="hero-slide active">
+    <div class="hero-img-placeholder">
+      <div class="car-silhouette">
+        <div class="car-s-roof"></div>
+        <div class="car-s-body"></div>
+        <div class="car-s-wheels">
+          <div class="car-s-wheel"></div>
+          <div class="car-s-wheel"></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-tag">Шинэ цуглуулга · 2026</div>
+    <h1 class="hero-title">Rolls-Royce<br><em>Phantom VIII</em></h1>
+    <div class="hero-actions">
+      <button class="btn-hero">Дэлгэрэнгүй</button>
+      <button class="btn-hero-ghost">Үзэлт захиалах</button>
+    </div>
+  </div>
+
+  <!-- Slide 2 -->
+  <div class="hero-slide">
+    <div class="hero-img-placeholder">
+      <div class="car-silhouette">
+        <div class="car-s-roof" style="width:50%;height:50px;"></div>
+        <div class="car-s-body" style="height:130px;"></div>
+        <div class="car-s-wheels">
+          <div class="car-s-wheel"></div>
+          <div class="car-s-wheel"></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-tag">Цахилгаан · 2026</div>
+    <h1 class="hero-title">Porsche<br><em>Taycan Turbo S</em></h1>
+    <div class="hero-actions">
+      <button class="btn-hero">Дэлгэрэнгүй</button>
+      <button class="btn-hero-ghost">Үзэлт захиалах</button>
+    </div>
+  </div>
+
+  <!-- Slide 3 -->
+  <div class="hero-slide">
+    <div class="hero-img-placeholder">
+      <div class="car-silhouette">
+        <div class="car-s-roof" style="width:40%;height:44px;"></div>
+        <div class="car-s-body" style="height:110px;"></div>
+        <div class="car-s-wheels">
+          <div class="car-s-wheel"></div>
+          <div class="car-s-wheel"></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-tag">Sports · V10</div>
+    <h1 class="hero-title">Lamborghini<br><em>Huracán EVO</em></h1>
+    <div class="hero-actions">
+      <button class="btn-hero">Дэлгэрэнгүй</button>
+      <button class="btn-hero-ghost">Үзэлт захиалах</button>
+    </div>
+  </div>
+
+  <div class="hero-dots">
+    <div class="dot active" onclick="goSlide(0)"></div>
+    <div class="dot" onclick="goSlide(1)"></div>
+    <div class="dot" onclick="goSlide(2)"></div>
+  </div>
+
+  <div class="hero-thumbs">
+    <div class="thumb active" onclick="goSlide(0)">
+      <div class="thumb-title">Phantom VIII</div>
+      <div class="thumb-sub">Rolls-Royce</div>
+    </div>
+    <div class="thumb" onclick="goSlide(1)">
+      <div class="thumb-title">Taycan Turbo S</div>
+      <div class="thumb-sub">Porsche · Electric</div>
+    </div>
+    <div class="thumb" onclick="goSlide(2)">
+      <div class="thumb-title">Huracán EVO</div>
+      <div class="thumb-sub">Lamborghini · V10</div>
+    </div>
+  </div>
+</section>
+
+<!-- MODELS -->
+<section class="models" id="models">
+  <div class="sec-header reveal">
+    <div>
+      <div class="sec-tag">Манай цуглуулга</div>
+      <h2 class="sec-title">Загвар<br><em>Сонголт</em></h2>
+    </div>
+    <a href="#" class="sec-link">Бүгдийг харах</a>
+  </div>
+
+  <div class="models-grid">
+    <div class="model-card reveal">
+      <div class="model-img">
+        <div class="model-ph">
+          <div class="model-ph-car"></div>
+          <span class="model-ph-lbl">Sedan</span>
+        </div>
+        <span class="model-badge badge-new">Шинэ</span>
+      </div>
+      <div class="model-info">
+        <div class="model-fuel">Gasoline</div>
+        <div class="model-name">Phantom VIII</div>
+        <div class="model-desc">Rolls-Royce · V12 · 4 хаалга, 4/5 суудал</div>
+        <a href="#" class="model-link">Судлах</a>
+      </div>
+    </div>
+
+    <div class="model-card reveal">
+      <div class="model-img">
+        <div class="model-ph">
+          <div class="model-ph-car"></div>
+          <span class="model-ph-lbl">SUV</span>
+        </div>
+        <span class="model-badge badge-new">Онцлох</span>
+      </div>
+      <div class="model-info">
+        <div class="model-fuel">Gasoline</div>
+        <div class="model-name">Cullinan</div>
+        <div class="model-desc">Rolls-Royce · V12 · 4 хаалга, 5 суудал</div>
+        <a href="#" class="model-link">Судлах</a>
+      </div>
+    </div>
+
+    <div class="model-card reveal">
+      <div class="model-img">
+        <div class="model-ph">
+          <div class="model-ph-car"></div>
+          <span class="model-ph-lbl">Sports EV</span>
+        </div>
+        <span class="model-badge badge-elec">Цахилгаан</span>
+      </div>
+      <div class="model-info">
+        <div class="model-fuel">Electric</div>
+        <div class="model-name">Taycan Turbo S</div>
+        <div class="model-desc">Porsche · Electric · 4 хаалга, 4/5 суудал</div>
+        <a href="#" class="model-link">Судлах</a>
+      </div>
+    </div>
+
+    <div class="model-card reveal">
+      <div class="model-img">
+        <div class="model-ph">
+          <div class="model-ph-car"></div>
+          <span class="model-ph-lbl">GT</span>
+        </div>
+      </div>
+      <div class="model-info">
+        <div class="model-fuel">Gasoline</div>
+        <div class="model-name">Continental GT</div>
+        <div class="model-desc">Bentley · W12 · 2 хаалга, 4 суудал</div>
+        <a href="#" class="model-link">Судлах</a>
+      </div>
+    </div>
+
+    <div class="model-card reveal">
+      <div class="model-img">
+        <div class="model-ph">
+          <div class="model-ph-car"></div>
+          <span class="model-ph-lbl">Sports</span>
+        </div>
+      </div>
+      <div class="model-info">
+        <div class="model-fuel">Gasoline</div>
+        <div class="model-name">Huracán EVO</div>
+        <div class="model-desc">Lamborghini · V10 · 2 хаалга, 2 суудал</div>
+        <a href="#" class="model-link">Судлах</a>
+      </div>
+    </div>
+
+    <div class="model-card reveal">
+      <div class="model-img">
+        <div class="model-ph">
+          <div class="model-ph-car"></div>
+          <span class="model-ph-lbl">Hybrid</span>
+        </div>
+        <span class="model-badge badge-hybrid">Hybrid</span>
+      </div>
+      <div class="model-info">
+        <div class="model-fuel">Hybrid · Gasoline</div>
+        <div class="model-name">SF90 Stradale</div>
+        <div class="model-desc">Ferrari · V8 Hybrid · 2 хаалга, 2 суудал</div>
+        <a href="#" class="model-link">Судлах</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DARK STRIP -->
+<div class="dark-strip">
+  <div class="ds-item reveal"><div class="ds-num">200+</div><div class="ds-lbl">Premium Vehicles</div></div>
+  <div class="ds-item reveal"><div class="ds-num">15</div><div class="ds-lbl">Жилийн туршлага</div></div>
+  <div class="ds-item reveal"><div class="ds-num">50+</div><div class="ds-lbl">Дэлхийн брэндүүд</div></div>
+  <div class="ds-item reveal"><div class="ds-num">∞</div><div class="ds-lbl">Үйлчилгээний чанар</div></div>
+</div>
+
+<!-- DISCOVER -->
+<section class="discover" id="discover">
+  <div class="sec-header reveal">
+    <div>
+      <div class="sec-tag">Үйлчилгээ</div>
+      <h2 class="sec-title">VIP<br><em>Туршлага</em></h2>
+    </div>
+  </div>
+  <div class="discover-grid">
+    <div class="disc-card reveal">
+      <div class="disc-img">
+        <div class="disc-ph">
+          <div class="disc-ph-box"></div>
+          <span class="disc-ph-lbl">Showroom</span>
+        </div>
+      </div>
+      <div class="disc-info">
+        <div class="disc-title">Хувийн үзэлт</div>
+        <div class="disc-sub">Нэг нэгэнтэй тусгай зөвлөгөө</div>
+      </div>
+    </div>
+    <div class="disc-card reveal">
+      <div class="disc-img">
+        <div class="disc-ph">
+          <div class="disc-ph-box"></div>
+          <span class="disc-ph-lbl">Delivery</span>
+        </div>
+      </div>
+      <div class="disc-info">
+        <div class="disc-title">Хаалганы хүргэлт</div>
+        <div class="disc-sub">Улсын аль ч хэсэгт хүргэнэ</div>
+      </div>
+    </div>
+    <div class="disc-card reveal">
+      <div class="disc-img">
+        <div class="disc-ph">
+          <div class="disc-ph-box"></div>
+          <span class="disc-ph-lbl">Sourcing</span>
+        </div>
+      </div>
+      <div class="disc-info">
+        <div class="disc-title">Тусгай захиалга</div>
+        <div class="disc-sub">Дэлхийн сүлжээгээр олж өгнө</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-info reveal">
+    <div class="sec-tag">Холбоо барих</div>
+    <h2 class="sec-title">Эхлүүлэх<br><em>цаг болжээ</em></h2>
+    <div class="cinfo-items">
+      <div class="cinfo-item">
+        <div class="cinfo-lbl">Showroom</div>
+        <div class="cinfo-val">Энхтайваны өргөн чөлөө 15,<br>Сүхбаатар дүүрэг, Улаанбаатар</div>
+      </div>
+      <div class="cinfo-item">
+        <div class="cinfo-lbl">Цагийн хуваарь</div>
+        <div class="cinfo-val">Даваа — Бямба: 10:00 — 19:00</div>
+      </div>
+      <div class="cinfo-item">
+        <div class="cinfo-lbl">Утас</div>
+        <div class="cinfo-val">+976 9900 0000</div>
+      </div>
+    </div>
+  </div>
+  <div class="cform reveal">
+    <div class="cfield"><label>Таны нэр</label><input type="text" placeholder="Бүтэн нэр"></div>
+    <div class="cfield"><label>Утасны дугаар</label><input type="text" placeholder="+976 ···· ····"></div>
+    <div class="cfield"><label>Сонирхсон загвар</label><input type="text" placeholder="Загвар эсвэл брэнд"></div>
+    <div class="cfield"><label>Мессеж</label><input type="text" placeholder="Яаж тусалж болохуй?"></div>
+    <button class="csubmit">Үзэлт захиалах</button>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">VIP Motors</div>
+  <div class="f-copy">© 2026 VIP Motors. Бүх эрх хуулиар хамгаалагдсан.</div>
+  <ul class="f-links">
+    <li><a href="#">Нууцлал</a></li>
+    <li><a href="#">Нөхцөл</a></li>
+    <li><a href="#">Instagram</a></li>
+  </ul>
+</footer>
+
+<script>
+// HERO SLIDER
+let current = 0;
+const slides = document.querySelectorAll('.hero-slide');
+const dots = document.querySelectorAll('.dot');
+const thumbs = document.querySelectorAll('.thumb');
+let autoTimer;
+
+function goSlide(n) {
+  slides[current].classList.remove('active');
+  dots[current].classList.remove('active');
+  thumbs[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  dots[current].classList.add('active');
+  thumbs[current].classList.add('active');
+  clearInterval(autoTimer);
+  autoTimer = setInterval(() => goSlide((current + 1) % slides.length), 5000);
+}
+autoTimer = setInterval(() => goSlide((current + 1) % slides.length), 5000);
+
+// CANVAS PARTICLE ANIMATION
+const canvas = document.getElementById('heroCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.size = Math.random() * 1.5 + 0.3;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.alpha = Math.random() * 0.5 + 0.1;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+// Draw connections
+function drawLines() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(255,255,255,${0.05 * (1 - dist/100)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, W, H);
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, '#0E1418');
+  grad.addColorStop(0.5, '#1a2030');
+  grad.addColorStop(1, '#0E1418');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  drawLines();
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// NAV SCROLL
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('mainNav');
+  if (window.scrollY > window.innerHeight - 100) {
+    nav.classList.add('light');
+  } else {
+    nav.classList.remove('light');
+  }
+});
+
+// SCROLL REVEAL
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
